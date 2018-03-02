@@ -1,0 +1,26 @@
+{
+  "name": "ts-lib-json-transform",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "repository": "https://github.com/tetrascience/ts-lib-json-transform.git",
+  "dependencies": {
+    "jsonpath": "^1.0.0",
+    "moment": "^2.20.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "eslint": "^3.19.0",
+    "eslint-config-tetrascience": "tetrascience/eslint-config-tetrascience",
+    "eslint-plugin-json": "^1.2.0",
+    "mocha": "^3.2.0",
+    "nyc": "^11.2.1",
+    "sinon": "^4.1.2"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint . --ext .js --ext .json",
+    "test": "ENV=test NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --timeout 1000",
+    "test-unit": "ENV=test NODE_ENV=test mocha --timeout 1000"
+  }
+}

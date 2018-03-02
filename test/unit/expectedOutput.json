@@ -1,0 +1,63 @@
+{
+  "TODO": [
+    "output an array from a query producing a single source value"
+  ],
+  "object": {
+    "constant": "this is constant",
+    "simple": "vonnegut",
+    "complex": "1996-12-25T05:00:00.000Z",
+    "simplex": "12/25/1996"
+  },
+  "array": [
+    {
+      "id": 1,
+      "stringId": "1",
+      "indexed": 0,
+      "subarray" : [
+        {
+          "indexed": 0,
+          "name": "granfalloons 1\n",
+          "subobject2": {
+            "name": "granfalloons 1"
+          }
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "stringId": "42",
+      "indexed": 1,
+      "subobject": {
+        "duplicateId": 42,
+        "name": "Torture and Blubber"
+      },
+      "subarray" : [
+        {
+          "indexed": 0,
+          "name": "granfalloons 42\n",
+          "subobject2": {
+            "name": "granfalloons 42"
+          }
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "stringId": "2",
+      "indexed": 2,
+      "subarray" : [
+        {
+          "indexed": 0,
+          "name": "granfalloons 2\n",
+          "subobject2": {
+            "name": "granfalloons 2"
+          }
+        }
+      ]
+    }
+  ],
+  "arrayOfValues": ["Hello, Star Vega", "Torture and Blubber", "Science Fiction"],
+  "firstValue": "Hello, Star Vega",
+  "lastValue": "Science Fiction",
+  "cantFindThis": null
+}

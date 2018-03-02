@@ -1,0 +1,38 @@
+{
+  "TODO": [
+    "output an array from a query producing a single source value"
+  ],
+  "object": {
+    "constant": "this is constant",
+    "simple": "$.id",
+    "complex": { "$path": "$.date", "$map": "isoDate" },
+    "simplex": { "$path": "$.date" }
+  },
+  "array": [
+    {
+      "$spread": "$.wampeters[*]",
+      "id": "$.wampeters[*].id",
+      "stringId": { "$path": "$.wampeters[*].id", "$map": "String" },
+      "indexed": { "$path": "$.wampeters[*]", "$map": "index" },
+      "subobject": {
+        "$if": "$.wampeters[*].condition",
+        "duplicateId": "$.wampeters[*].id",
+        "name": "$.wampeters[*].name"
+      },
+      "subarray" : [
+        {
+          "$spread": "$.wampeters[*].foma[*]",
+          "indexed": { "$path": "$.wampeters[*].foma[*]", "$map": "index" },
+          "name": "$.wampeters[*].foma[*].name",
+          "subobject2": {
+            "name": { "$path": "$.wampeters[*].foma[*].name", "$map": "trim" }
+          }
+        }
+      ]
+    }
+  ],
+  "arrayOfValues": "$.wampeters[*].name",
+  "firstValue": "$.wampeters[0].name",
+  "lastValue": "$.wampeters[-1:].name",
+  "cantFindThis": "$.this.does.not.exist"
+}

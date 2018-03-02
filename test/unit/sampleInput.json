@@ -1,0 +1,28 @@
+{
+  "id": "vonnegut",
+  "date": "12/25/1996",
+  "wampeters": [
+    {
+      "id": 1,
+      "name": "Hello, Star Vega",
+      "foma": [
+        { "name": "granfalloons 1\n" }
+      ]
+    },
+    {
+      "id": 42,
+      "name": "Torture and Blubber",
+      "foma": [
+        { "name": "granfalloons 42\n" }
+      ],
+      "condition": "don't care"
+    },
+    {
+      "id": 2,
+      "name": "Science Fiction",
+      "foma": [
+        { "name": "granfalloons 2\n" }
+      ]
+    }
+  ]
+}
