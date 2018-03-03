@@ -15,7 +15,7 @@ document's structure.  As the transformer traverses all of the nodes (objects,
 arrays, values) in your template JSON, it emits the nodes to the output, using
 transformation instructions within the nodes.  Transformation instructions are
 JsonPath queries (accompanied by further details) to extract and transform nodes
-from the input document.  See [Template format](#Template-format) for more
+from the input document.  See [Template format](#template-format) for more
 details.
 
 The general philosophy of this transformer is to *not throw*.  This makes it
@@ -167,7 +167,7 @@ template will output an array with exactly two items:
     to query the document.
 3.  The `"$map"` key indicates that the associated value should be transformed
     via a mapping function.  There are several built-in functions.  (See the
-    [Built-in functions](#Built-in-functions))  You can extend these mapping
+    [Built-in functions](#built-in-functions))  You can extend these mapping
     functions by overriding/extending the built-in functions object.
 4.  Arrays of objects are defined via an array that must have _exactly_ one item
     having a `"$spread"` key. The `"$spread"` key defines a JsonPath query to
