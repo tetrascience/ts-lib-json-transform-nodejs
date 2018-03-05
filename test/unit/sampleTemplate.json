@@ -31,6 +31,7 @@
       ]
     }
   ],
+  "array_not_spread": [{ "$path": "$.id" }],
   "arrayOfValues": "$.wampeters[*].name",
   "firstValue": "$.wampeters[0].name",
   "lastValue": "$.wampeters[-1:].name",
