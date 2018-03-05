@@ -1,9 +1,9 @@
-// Takes a transform function and returns a function that traverses a
+// Takes a evaluate function and returns a function that traverses a
 // JSON object (a "template") to transform another JSON object (a "document").
-// The transform function is run on each value, giving it the opportunity
+// The evaluate function is run on each value, giving it the opportunity
 // to return a replacement `value` or a replacement `node`.
 module.exports.traverse
-  = (transform) => {
+  = (evaluate) => {
     const traverse =
       (template, document, path = '$') =>
         Object.keys(template).reduce(
@@ -11,13 +11,13 @@ module.exports.traverse
             /* eslint-disable no-param-reassign */
             const keyPath = appendPathKey(path, key);
             const node = template[key];
-            const xformResult = transform(document, node, key, keyPath);
-            // See if transform function returns a value or more document nodes.
-            if (xformResult) {
-              if (typeof xformResult.value !== 'undefined') {
-                output[key] = xformResult.value;
-              } else if (typeof xformResult.node !== 'undefined') {
-                output[key] = traverse(xformResult.node, document, keyPath);
+            const evalResult = evaluate(document, node, key, keyPath);
+            // See if evaluate function returns a value or more document nodes.
+            if (evalResult) {
+              if (typeof evalResult.value !== 'undefined') {
+                output[key] = evalResult.value;
+              } else if (typeof evalResult.node !== 'undefined') {
+                output[key] = traverse(evalResult.node, document, keyPath);
               }
             // Otherwise, is this a sub-section of the template (sub-template)?
             } else if (isNestedTemplate(node)) {

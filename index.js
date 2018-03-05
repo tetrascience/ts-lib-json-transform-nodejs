@@ -1,10 +1,10 @@
 // A JSON transform based on a simple JSON template
 const { traverse } = require('./traverse');
-const { transform } = require('./transform');
+const { evaluate } = require('./evaluate');
 const functions = require('./functions');
 const jsonpath = require('jsonpath');
 
-const jsonTransform = traverse(transform(jsonpath, functions));
+const jsonTransform = traverse(evaluate(jsonpath, functions));
 
 // Handles simple cases.
 module.exports.jsonTransform =
@@ -12,5 +12,5 @@ module.exports.jsonTransform =
 
 // Create your own by combining and/or overriding these.
 module.exports.traverse = traverse;
-module.exports.transform = transform;
+module.exports.evaluate = evaluate;
 module.exports.functions = functions;

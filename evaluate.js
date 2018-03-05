@@ -2,7 +2,7 @@
 // Evaluates every part of a template, returning either:
 // - a value to insert into the output, or
 // - a new fragment to insert into the template (recursive).
-module.exports.transform
+module.exports.evaluate
   = (jsonpath, functionMap) => {
     const findValue = jsonPathValue(jsonpath);
     const findFunc = findFunction(functionMap);

@@ -56,11 +56,11 @@ Advanced usage:
 
 It's common to override or extend the built-in `functions` map.  It's also
 possible to extend functionality by extending or overriding the `traverse`,
-`transform`, and `jsonpath` functions, as well.
+`evaluate`, and `jsonpath` functions, as well.
 
 ```js
 // Override the functions map and use them in the template.
-const { traverse, transform, functions } = require('ts-json-transform');
+const { traverse, evaluate, functions } = require('ts-json-transform');
 const jsonpath = require('jsonpath');
 const template = require('./myTemplate.json');
 
@@ -75,11 +75,11 @@ const myFunctions = Object.assign({}, functions, {
 });
 
 // Create our custom transformer
-const myTransformer = traverse(transform(jsonpath, myFunctions));
-const transformDoc = doc => myTransformer(template, doc);
+const myTransformer = traverse(evaluate(jsonpath, myFunctions));
+const transform = doc => myTransformer(template, doc);
 
 getInputFile()
-  .then(transformDoc)
+  .then(transform)
   .then(output => saveOutputFile(output));
 ```
 
