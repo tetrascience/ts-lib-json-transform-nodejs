@@ -183,14 +183,17 @@ template will output an array with exactly two items:
 
 ### Possible future features
 
-1.  JsonPath allows the input document arrays to be filtered via simple
-    expressions.  This could be valuable.
-1.  JsonPath allows "scoped" queries via a leading `"@"` instead of a leading
+1.  Detect more developer errors.  Specifically, the code to detect `"$"` keys
+    in templates does not detect unknown keys or incorrect mixture of keys with
+    non-keys.  (TODO: call `"$"` keys "instructions"?)
+2.  JsonPath allows the input document arrays to be filtered via simple
+    [expressions](http://goessner.net/articles/JsonPath/index.html#e3).  
+    This could be valuable.
+3.  JsonPath allows "scoped" queries via a leading `"@"` instead of a leading
     `"$"` in queries.  This would make templates easier to read and refactor.
     For example, under a query of `"$.foo"` in a template, a scoped query of
     `"@.bar"` would resolve to `"$.foo.bar"`.
-1.  Add a `"$comment"` key.  Then, throw if any unrecognized `"$"` keys are
-    encountered (optional).
+4.  Add a `"$comment"` key.
 
 ### Built-in functions
 
