@@ -10,18 +10,18 @@
   },
   "array": [
     {
-      "$spread": "$.wampeters[*]",
+      "$each": "$.wampeters[*]",
       "id": "$.wampeters[*].id",
       "stringId": { "$path": "$.wampeters[*].id", "$map": "String" },
       "indexed": { "$path": "$.wampeters[*]", "$map": "index" },
       "subobject": {
-        "$if": "$.wampeters[*].condition",
+        "$exists": "$.wampeters[*].condition",
         "duplicateId": "$.wampeters[*].id",
         "name": "$.wampeters[*].name"
       },
       "subarray" : [
         {
-          "$spread": "$.wampeters[*].foma[*]",
+          "$each": "$.wampeters[*].foma[*]",
           "indexed": { "$path": "$.wampeters[*].foma[*]", "$map": "index" },
           "name": "$.wampeters[*].foma[*].name",
           "subobject2": {
@@ -31,6 +31,7 @@
       ]
     }
   ],
+  "array_not_spread": [{ "$path": "$.id" }],
   "arrayOfValues": "$.wampeters[*].name",
   "firstValue": "$.wampeters[0].name",
   "lastValue": "$.wampeters[-1:].name",

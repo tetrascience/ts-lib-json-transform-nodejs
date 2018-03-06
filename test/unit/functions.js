@@ -6,7 +6,7 @@ const { functions } = require('../../index');
 const manyTypesOfValues =
   ['foo', '', 27, 3.14159, [], {}, null, undefined, Infinity, -Infinity];
 
-describe('transform functions', () => {
+describe('map functions', () => {
   // Ensure test coverage by tracking which were tested
   const functionsTested = {};
 

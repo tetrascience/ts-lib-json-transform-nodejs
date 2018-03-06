@@ -2,7 +2,7 @@ const { describe, it } = require('mocha');
 const { assert } = require('chai');
 const { spy } = require('sinon');
 
-const { transform, jsonTransform } = require('../../index');
+const { evaluate, jsonTransform } = require('../../index');
 const template = require('./sampleTemplate.json');
 const input = require('./sampleInput.json');
 const expected = require('./expectedOutput.json');
@@ -15,7 +15,7 @@ describe('jsonTransform', () => {
 
   it('should add json path query to an error', () => {
     const jsonpathMock = { query: spy(() => { throw new Error(); }) };
-    const func = transform(jsonpathMock, {});
+    const func = evaluate(jsonpathMock, {});
 
     try {
       func({}, '$.foo', 'key', '--unique path string--');
@@ -39,4 +39,8 @@ describe('jsonTransform', () => {
 
   // See rewriteFragments function.  It doesn't currently work.
   it('should allow array functionality to aggregate several levels at once');
+
+  it('should throw if unknown instructions are found');
+
+  it('should throw if invalid combos of instructions are found');
 });
