@@ -122,14 +122,15 @@ output format.  The input format can be completely different from the output.
 
 The following template takes an input document's array of objects
 (`some_array_in_input`) and outputs a transformed array of objects.  The
-`"$spread"` key instructs the transformer how to find the array in the input
-document.
+`"$each"` key instructs the transformer how to find the array in the input
+document.  The remaining keys in the object are used as a template for the
+items in the output array.
 
 ```json
 {
   "an_array": [
     {
-      "$spread": "$.some_array_in_input[*]",
+      "$each": "$.some_array_in_input[*]",
       "a_value": "$.some_array_in_input[*].a_value",
       "another_value_cast_to_number": {
         "$path": "$.some_array_in_input[*].another_value",
@@ -140,9 +141,9 @@ document.
 }
 ```
 
-To output an array with a predefined set of items, don't use the `"$spread"`
-key.  Instead, just define the items to be output.  For example, the following
-template will output an array with exactly two items:
+To output an array with a predefined set of items, don't use the `"$each"`
+instruction.  Instead, just define the items to be output.  For example, the
+following template will output an array with exactly two items:
 
 ```json
 {
@@ -161,39 +162,39 @@ template will output an array with exactly two items:
 
 1.  Output values are computed via
     [JsonPath](http://goessner.net/articles/JsonPath/) queries.  
-2.  Values can be computed via strings (like `"id": "$.ID"`) or
-    via an object containing a `"$path"` key and further instructions (such as
-    the `"$map"` key).  The value of the `"$path"` key is a JsonPath query used
+2.  Values can be computed via strings (like `"id": "$.ID"`) or via an object
+    containing a `"$path"` instruction and further instructions (such as
+    `"$map"`).  The value of the `"$path"` instruction is a JsonPath query used
     to query the document.
-3.  The `"$map"` key indicates that the associated value should be transformed
-    via a mapping function.  There are several built-in functions.  (See the
-    [Built-in functions](#built-in-functions))  You can extend these mapping
-    functions by overriding/extending the built-in functions object.
+3.  The `"$map"` instruction indicates that the associated value should be
+    transformed via a mapping function.  There are several built-in functions.
+    (See the [Built-in functions](#built-in-functions))  You can extend these
+    mapping functions by overriding/extending the built-in functions object.
 4.  Arrays of objects are defined via an array that must have _exactly_ one item
-    having a `"$spread"` key. The `"$spread"` key defines a JsonPath query to
+    having an `"$each"` instruction. `"$each"` defines a JsonPath query to
     find the input values.  The remaining keys in the item describe a
     "prototype" of the objects in the array.  One output object will be created
     for each JsonPath query result on the input document. (There's a bug in the
-    current implementation preventing the ability to flatten embedded arrays.
-    Only the last `[*]` is used so only the innermost array is "spread".)
-5.  Conditional output can be achieved for many cases with the `"$if"` key.
-    The value of the `"$if"` key is a JsonPath query.  If the query finds
-    any matching value(s) in the input document, the entire template object is
-    used.  Otherwise, it is omitted.
+    current implementation preventing the ability to flatten embedded arrays:
+    only the last `[*]` is used so only the innermost array is "spread".)
+5.  Conditional output can be achieved for many cases with the `"$exists"`
+    instruction. The value of `"$exists"` is a JsonPath query.  If the query
+    finds any matching value(s) in the input document, the entire template
+    object is used.  Otherwise, it is omitted.
 
 ### Possible future features
 
 1.  Detect more developer errors.  Specifically, the code to detect `"$"` keys
     in templates does not detect unknown keys or incorrect mixture of keys with
-    non-keys.  (TODO: call `"$"` keys "instructions"?)
+    non-keys.
 2.  JsonPath allows the input document arrays to be filtered via simple
     [expressions](http://goessner.net/articles/JsonPath/index.html#e3).  
-    This could be valuable.
+    This could be valuable.  It's currently only supported in `"$path"`.
 3.  JsonPath allows "scoped" queries via a leading `"@"` instead of a leading
     `"$"` in queries.  This would make templates easier to read and refactor.
     For example, under a query of `"$.foo"` in a template, a scoped query of
     `"@.bar"` would resolve to `"$.foo.bar"`.
-4.  Add a `"$comment"` key.
+4.  Add a `"$comment"` instruction.
 
 ### Built-in functions
 

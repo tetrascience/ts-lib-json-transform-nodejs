@@ -44,11 +44,11 @@ const isSubTemplateObject =
     node && typeof node === 'object' && isJsonPathString(node.$path);
 
 // Determines that an array is a sub-template if it contains exactly one item
-// and that item has a "$spread" property that is a JsonPath string.
-// TODO: throw if .$spread is found, but other conditions aren't met.
+// and that item has a "$each" property that is a JsonPath string.
+// TODO: throw if .$each is found, but other conditions aren't met.
 const isSubTemplateArray =
   node =>
-    Array.isArray(node) && node.length === 1 && isJsonPathString(node[0].$spread);
+    Array.isArray(node) && node.length === 1 && isJsonPathString(node[0].$each);
 
 // Performs a JsonPath query on a document (object or array).
 const jsonPathValue =
@@ -65,7 +65,7 @@ const explodeArrayTemplate =
   jsonpath => (doc, node) => {
     // Extract sub-template and which array to explode
     const subTemplate = node[0];
-    const [scope, nthArray] = subTemplate.$spread.split(',');
+    const [scope, nthArray] = subTemplate.$each.split(',');
 
     const count = jsonpath.query(doc, scope).length;
     const fragments = rewriteFragments(subTemplate, scope, nthArray, count);
@@ -96,7 +96,7 @@ const rewriteFragments =
         (_, i) => {
           const $scope = $scopeTemplate.replace('[{{i}}]', `[${i}]`);
           const frag = JSON.parse(fragmentTemplate.replace(replacer, $scope));
-          delete frag.$spread;
+          delete frag.$each;
           return frag;
         }
       );
@@ -104,16 +104,16 @@ const rewriteFragments =
 
 const isOptionalSubTemplate =
   node =>
-    node && typeof node === 'object' && isJsonPathString(node.$if);
+    node && typeof node === 'object' && isJsonPathString(node.$exists);
 
 const maybeObjectTemplate =
   jsonpath => (doc, node) => {
-    const values = jsonpath.query(doc, node.$if);
+    const values = jsonpath.query(doc, node.$exists);
     const exists = values !== null && /* for arrays: */ values.length > 0;
     if (!exists) return {};
 
     const clone = jsonClone(node);
-    delete clone.$if;
+    delete clone.$exists;
     return { node: clone };
   };
 
