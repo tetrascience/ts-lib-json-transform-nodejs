@@ -39,4 +39,8 @@ describe('jsonTransform', () => {
 
   // See rewriteFragments function.  It doesn't currently work.
   it('should allow array functionality to aggregate several levels at once');
+
+  it('should throw if unknown instructions are found');
+
+  it('should throw if invalid combos of instructions are found');
 });
