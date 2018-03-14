@@ -1,7 +1,13 @@
-// Takes a evaluate function and returns a function that traverses a
-// JSON object (a "template") to transform another JSON object (a "document").
-// The evaluate function is run on each value, giving it the opportunity
-// to return a replacement `value` or a replacement `node`.
+// Creates a traverse function, given a `reduce` function and a `setProperty`
+// function, and then an `evaluate` function.
+// The returned `traverse` function traverses a JSON object (a "template"),
+// producing an output JSON object (a "document") that is a transformation
+// of an input JSON document.
+// By injecting async `reduce` and `setProperty` functions, the traverse
+// function will be async, which will be friendlier to situations where many
+// large files may need to be transformed _en mass_.  The `evaluate` function
+// evaluates every node in the template to produce an output value (or to
+// generate further template nodes).
 module.exports.createTraverse =
   (reduce, setProperty) => (evaluate) => {
     const traverse =

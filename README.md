@@ -10,7 +10,7 @@ transformers and have familiarized yourself with
 [JsonPath](http://goessner.net/articles/JsonPath/), you are ready to use this
 library!
 
-Basically, you create a template document that mimcs the desired output
+Basically, you create a template document that mimics the desired output
 document's structure.  As the transformer traverses all of the nodes (objects,
 arrays, values) in your template JSON, it emits the nodes to the output, using
 transformation instructions within the nodes.  Transformation instructions are
@@ -29,16 +29,19 @@ Actually, the transformer doesn't even care if the documents are strict JSON.
 It will handle any JavaScript objects or arrays as input, template, or output.
 
 This transformer operates on a fully-loaded JSON document.  It does not support
-streaming.  Therefore, it's likely not scalable to much more than a few document
+streaming.  Therefore, it's likely not scalable to much more than a few dozen
 transformations per second.  It's also probably only useful for documents less
 than a few tens of MB in size.  If we need to operate on larger documents, we
 can add support for streams.  ([This](https://www.npmjs.com/package/jsonparse)
 is the only streaming JSON parser I could get to work on our large input
 documents, fwiw.  All the others crashed.)
 
+However, the transformer does support [async](#async-usage) operation, which
+might help with scaling.
+
 ## Usage
 
-Basic usage:
+### Basic usage
 
 ```js
 // Very simple example for a transform template that works with just the
@@ -52,7 +55,7 @@ getInputFile()
   .then(output => saveOutputFile(output));
 ```
 
-Advanced usage:
+### Advanced usage
 
 It's common to override or extend the built-in `functions` map.  It's also
 possible to extend functionality by extending or overriding the `traverse`,
@@ -110,6 +113,13 @@ A template for this custom transformer might look like this:
 ```
 
 More template examples can be found below.
+
+### Async usage
+
+You can create an async transformer by using the `traverseP` function instead
+of the `traverse` function.  The function will yield when processing objects
+and arrays in the template, allowing the processing of multiple files
+simultaneously.
 
 ## Template format
 
@@ -234,7 +244,9 @@ Parameters:
 
 Result: a value to be inserted into the output document.
 
-Functions should return JSON-compatible values (number|string|Array|Object|null).
+Functions must return JSON-compatible values (number|string|Array|Object|null).
 Note `undefined` is not JSON-compatible.  You probably want to return `null`.
 
-Copyright © 2018 TetraScience, Inc. All Rights Reserved. You may not use, display, copy, distribute, or modify this code without the express written permission of TetraScience, Inc.
+Copyright © 2018 TetraScience, Inc. All Rights Reserved. You may not use,
+display, copy, distribute, or modify this code without the express written
+permission of TetraScience, Inc.
