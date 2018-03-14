@@ -2,7 +2,8 @@ const { describe, it } = require('mocha');
 const { assert } = require('chai');
 const { spy } = require('sinon');
 
-const { evaluate, jsonTransform } = require('../../index');
+const jsonpath = require('jsonpath');
+const { evaluate, traverseP, functions, jsonTransform } = require('../../index');
 const template = require('./sampleTemplate.json');
 const input = require('./sampleInput.json');
 const expected = require('./expectedOutput.json');
@@ -35,6 +36,12 @@ describe('jsonTransform', () => {
     } catch (e) {
       assert.include(e.message, '$map');
     }
+  });
+
+  it('should transform the sample template async', () => {
+    const transform = traverseP(evaluate(jsonpath, functions));
+    return transform(template, input)
+      .then(result => assert.deepEqual(result, expected));
   });
 
   // See rewriteFragments function.  It doesn't currently work.
