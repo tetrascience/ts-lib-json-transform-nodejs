@@ -26,7 +26,7 @@ module.exports.evaluate
         }
         return undefined;
       } catch (e) {
-        e.message += ` -- JsonPath = ${path}`;
+        e.message += ` -- Json Template Path = "${path}"`;
         throw e;
       }
     };
