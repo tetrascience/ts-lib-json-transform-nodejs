@@ -82,9 +82,10 @@ const explodeArrayTemplate =
 // Creates a template fragment whose queries are restricted to specific path.
 const rewriteFragment =
   protoype => (path) => {
-    const wildcard =
-      path.replace(/\[\d+\]/g, '[*]').replace(/(\$|\[|\*|\]|\.)/g, '\\$1');
-    const replacer = new RegExp(`"${wildcard}(.*?)"`, 'g');
+    const prefix = path
+      .replace(/^(.*)\[\d+\]/, '$1[*]') // replace last index with a wildcard
+      .replace(/(\$|\[|\*|\]|\.)/g, '\\$1'); // encode for regexp
+    const replacer = new RegExp(`"${prefix}(.*?)"`, 'g');
     const strFragment = protoype.replace(replacer, `"${path}$1"`);
 
     return JSON.parse(strFragment);
