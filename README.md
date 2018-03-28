@@ -184,9 +184,7 @@ following template will output an array with exactly two items:
     having an `"$each"` instruction. `"$each"` defines a JsonPath query to
     find the input values.  The remaining keys in the item describe a
     "prototype" of the objects in the array.  One output object will be created
-    for each JsonPath query result on the input document. (There's a bug in the
-    current implementation preventing the ability to flatten embedded arrays:
-    only the last `[*]` is used so only the innermost array is "spread".)
+    for each JsonPath query result on the input document.
 5.  Conditional output can be achieved for many cases with the `"$exists"`
     instruction. The value of `"$exists"` is a JsonPath query.  If the query
     finds any matching value(s) in the input document, the entire template
@@ -197,14 +195,11 @@ following template will output an array with exactly two items:
 1.  Detect more developer errors.  Specifically, the code to detect `"$"` keys
     in templates does not detect unknown keys or incorrect mixture of keys with
     non-keys.
-2.  JsonPath allows the input document arrays to be filtered via simple
-    [expressions](http://goessner.net/articles/JsonPath/index.html#e3).  
-    This could be valuable.  It's currently only supported in `"$path"`.
-3.  JsonPath allows "scoped" queries via a leading `"@"` instead of a leading
+2.  JsonPath allows "scoped" queries via a leading `"@"` instead of a leading
     `"$"` in queries.  This would make templates easier to read and refactor.
     For example, under a query of `"$.foo"` in a template, a scoped query of
     `"@.bar"` would resolve to `"$.foo.bar"`.
-4.  Add a `"$comment"` instruction.
+3.  Add a `"$comment"` instruction.
 
 ### Built-in functions
 
