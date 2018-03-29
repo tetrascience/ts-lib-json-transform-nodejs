@@ -59,7 +59,7 @@ const jsonPathValue =
     return { value: value === undefined ? null : value };
   };
 
-// If it has at least one expression, slice, or union subscript, the tempalte
+// If it has at least one expression, slice, or union subscript, the template
 // author intended it to be an array.
 // TODO: pre-process the template, applying this function to pre-determine if
 // template author intended to return an array or value
