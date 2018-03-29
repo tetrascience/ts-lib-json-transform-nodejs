@@ -60,7 +60,8 @@ const jsonPathValue =
   };
 
 // If it has at least one expression, slice, or union subscript, the template
-// author intended it to be an array.
+// author intended it to be an array.  One exception: a slice subscript that
+// extracts the last item (`[-1:]`) is inferred to indicate a scalar.
 // TODO: pre-process the template, applying this function to pre-determine if
 // template author intended to return an array or value
 const isArrayQuery =
