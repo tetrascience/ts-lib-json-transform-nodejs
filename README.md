@@ -130,6 +130,8 @@ output format.  The input format can be completely different from the output.
 
 > TODO: more examples!!!
 
+> Hint: there are even more examples in the tests.
+
 The following template takes an input document's array of objects
 (`some_array_in_input`) and outputs a transformed array of objects.  The
 `"$each"` key instructs the transformer how to find the array in the input
@@ -171,21 +173,28 @@ following template will output an array with exactly two items:
 ### Notable features
 
 1.  Output values are computed via
-    [JsonPath](http://goessner.net/articles/JsonPath/) queries.  
-2.  Values can be computed via strings (like `"id": "$.ID"`) or via an object
+    [JsonPath](http://goessner.net/articles/JsonPath/) queries.
+2.  Queries are interpreted to determine whether the author intends to output a
+    single value ("scalar") or an array of values.  A query such as `"$.foo[*]"`
+    is clearly an array, but `"$.foo[0]"`, `"$.foo.bar"`, and `"$.foo['bar']"`
+    are for a single value.  The special case, `"$.foo[-1:]"` (a subscript
+    slice to fetch the last item), also returns a single value. _All other
+    subscript slices and expressions return an array of values._ For instance,
+    `"$.foo[(@.length-1)]"` returns an _array_ containing the last item.
+3.  Values can be computed via strings (like `"id": "$.ID"`) or via an object
     containing a `"$path"` instruction and further instructions (such as
     `"$map"`).  The value of the `"$path"` instruction is a JsonPath query used
     to query the document.
-3.  The `"$map"` instruction indicates that the associated value should be
+4.  The `"$map"` instruction indicates that the associated value should be
     transformed via a mapping function.  There are several built-in functions.
     (See the [Built-in functions](#built-in-functions))  You can extend these
     mapping functions by overriding/extending the built-in functions object.
-4.  Arrays of objects are defined via an array that must have _exactly_ one item
+5.  Arrays of objects are defined via an array that must have _exactly_ one item
     having an `"$each"` instruction. `"$each"` defines a JsonPath query to
     find the input values.  The remaining keys in the item describe a
     "prototype" of the objects in the array.  One output object will be created
-    for each JsonPath query result on the input document.
-5.  Conditional output can be achieved for many cases with the `"$exists"`
+    from the prototype for each JsonPath query result on the input document.
+6.  Conditional output can be achieved for many cases with the `"$exists"`
     instruction. The value of `"$exists"` is a JsonPath query.  If the query
     finds any matching value(s) in the input document, the entire template
     object is used.  Otherwise, it is omitted.
@@ -199,7 +208,7 @@ following template will output an array with exactly two items:
     `"$"` in queries.  This would make templates easier to read and refactor.
     For example, under a query of `"$.foo"` in a template, a scoped query of
     `"@.bar"` would resolve to `"$.foo.bar"`.
-3.  Add a `"$comment"` instruction.
+3.  Add a `"$comment"` instruction that doesn't get output.
 
 ### Built-in functions
 
