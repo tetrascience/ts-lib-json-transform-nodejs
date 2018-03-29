@@ -1,7 +1,4 @@
 {
-  "TODO": [
-    "output an array from a query producing a single source value"
-  ],
   "object": {
     "constant": "this is constant",
     "simple": "vonnegut",
@@ -56,8 +53,17 @@
       ]
     }
   ],
+  "array_filter_expression": [
+    { "names": ["granfalloons 1\n"] },
+    { "names": ["granfalloons 42\n"] }
+  ],
+  "array_slice_expression": [
+    { "id": 1 },
+    { "id": 2 }
+  ],
   "array_not_spread": ["vonnegut"],
   "arrayOfValues": ["Hello, Star Vega", "Torture and Blubber", "Science Fiction"],
+  "arrayOfValues2": ["granfalloons 1\n", "granfalloons 42\n", "granfalloons 2\n"],
   "firstValue": "Hello, Star Vega",
   "lastValue": "Science Fiction",
   "cantFindThis": null

@@ -1,7 +1,4 @@
 {
-  "TODO": [
-    "output an array from a query producing a single source value"
-  ],
   "object": {
     "constant": "this is constant",
     "simple": "$.id",
@@ -31,8 +28,21 @@
       ]
     }
   ],
+  "array_filter_expression": [
+    {
+      "$each": "$.wampeters[?(@.name!='Science Fiction')]",
+      "names": "$.wampeters[*].foma[*].name"
+    }
+  ],
+  "array_slice_expression": [
+    {
+      "$each": "$.wampeters[0:3:2]",
+      "id": "$.wampeters[*].id"
+    }
+  ],
   "array_not_spread": [{ "$path": "$.id" }],
   "arrayOfValues": "$.wampeters[*].name",
+  "arrayOfValues2": "$.wampeters[*].foma[*].name",
   "firstValue": "$.wampeters[0].name",
   "lastValue": "$.wampeters[-1:].name",
   "cantFindThis": "$.this.does.not.exist"

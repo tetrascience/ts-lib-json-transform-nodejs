@@ -26,7 +26,7 @@ module.exports.evaluate
         }
         return undefined;
       } catch (e) {
-        e.message += ` -- JsonPath = ${path}`;
+        e.message += ` -- Json Template Path = "${path}"`;
         throw e;
       }
     };
@@ -53,53 +53,58 @@ const isSubTemplateArray =
 // Performs a JsonPath query on a document (object or array).
 const jsonPathValue =
   jsonpath => (doc, query) => {
-    const values = jsonpath.query(doc, query);
-    return values.length > 0
-      ? { value: values.length === 1 ? values[0] : values }
-      : { value: null };
+    const value = isArrayQuery(jsonpath, query)
+      ? jsonpath.query(doc, query)
+      : jsonpath.value(doc, query);
+    return { value: value === undefined ? null : value };
   };
+
+// If it has at least one expression, slice, or union subscript, the template
+// author intended it to be an array.  One exception: a slice subscript that
+// extracts the last item (`[-1:]`) is inferred to indicate a scalar.
+// TODO: pre-process the template, applying this function to pre-determine if
+// template author intended to return an array or value
+const isArrayQuery =
+  (jsonpath, query) =>
+    jsonpath
+      .parse(query)
+      .some(
+        ({ expression, operation }) =>
+          operation === 'subscript'
+          && !(expression.type === 'string_literal' || expression.type === 'numeric_literal')
+          && !(expression.type === 'slice' && expression.value === '-1:')
+      );
 
 // Converts a template spec for an array into individual specs for each item
 // discovered in the document.
 const explodeArrayTemplate =
   jsonpath => (doc, node) => {
-    // Extract sub-template and which array to explode
-    const subTemplate = node[0];
-    const [scope, nthArray] = subTemplate.$each.split(',');
+    // Extract sub-template
+    const subTemplate = jsonClone(node[0]);
+    const scope = subTemplate.$each;
+    delete subTemplate.$each;
+    const strTemplate = JSON.stringify(subTemplate);
 
-    const count = jsonpath.query(doc, scope).length;
-    const fragments = rewriteFragments(subTemplate, scope, nthArray, count);
+    // Run query to get selected (possibly filtered) nodes
+    const paths =
+      jsonpath.paths(doc, scope).map(path => jsonpath.stringify(path));
+
+    // For each path, create a new template fragment
+    const fragments = paths.map(rewriteFragment(strTemplate));
 
     return { node: fragments };
   };
 
-// Rewrites the new template fragments created when exploding an array.
-// The jsonpath queries within these fragments are more specific,
-// e.g. `Arr[0]` through `Arr[7]` instead of `Arr[*]`.
-// TODO: this doesn't work right when traversing several embedded arrays at once.
-const rewriteFragments =
-  (subTemplate, scope, nthArray, length) => {
-    // TODO: Don't assume selector is [*], allow filters like [?(@Mass)]
-    const parts = scope.split(/\[\*\]/g);
-    const pos = typeof nthArray !== 'undefined' ? nthArray : parts.length - 1;
-    const fragmentTemplate = JSON.stringify(subTemplate);
-    const replacer = new RegExp(scope.replace(/(\$|\*|\[|\])/g, '\\$1'), 'g');
-    const $scopeTemplate =
-      parts.slice(1).reduce(
-        (s, part, i) => s.concat(i + 1 === pos ? '[{{i}}]' : '[*]', part),
-        parts[0]
-      );
+// Creates a template fragment whose queries are restricted to specific path.
+const rewriteFragment =
+  protoype => (path) => {
+    const prefix = path
+      .replace(/^(.*)\[\d+\]/, '$1[*]') // replace last index with a wildcard
+      .replace(/(\$|\[|\*|\]|\.)/g, '\\$1'); // encode for regexp
+    const replacer = new RegExp(`"${prefix}(.*?)"`, 'g');
+    const strFragment = protoype.replace(replacer, `"${path}$1"`);
 
-    // Re-write the scope for each new doc fragment
-    // TODO: [re]implement $scope so we don't have to rewrite the template?
-    return Array.from({ length }).map(
-        (_, i) => {
-          const $scope = $scopeTemplate.replace('[{{i}}]', `[${i}]`);
-          const frag = JSON.parse(fragmentTemplate.replace(replacer, $scope));
-          delete frag.$each;
-          return frag;
-        }
-      );
+    return JSON.parse(strFragment);
   };
 
 const isOptionalSubTemplate =

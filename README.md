@@ -10,7 +10,7 @@ transformers and have familiarized yourself with
 [JsonPath](http://goessner.net/articles/JsonPath/), you are ready to use this
 library!
 
-Basically, you create a template document that mimcs the desired output
+Basically, you create a template document that mimics the desired output
 document's structure.  As the transformer traverses all of the nodes (objects,
 arrays, values) in your template JSON, it emits the nodes to the output, using
 transformation instructions within the nodes.  Transformation instructions are
@@ -29,16 +29,19 @@ Actually, the transformer doesn't even care if the documents are strict JSON.
 It will handle any JavaScript objects or arrays as input, template, or output.
 
 This transformer operates on a fully-loaded JSON document.  It does not support
-streaming.  Therefore, it's likely not scalable to much more than a few document
+streaming.  Therefore, it's likely not scalable to much more than a few dozen
 transformations per second.  It's also probably only useful for documents less
 than a few tens of MB in size.  If we need to operate on larger documents, we
 can add support for streams.  ([This](https://www.npmjs.com/package/jsonparse)
 is the only streaming JSON parser I could get to work on our large input
 documents, fwiw.  All the others crashed.)
 
+However, the transformer does support [async](#async-usage) operation, which
+might help with scaling.
+
 ## Usage
 
-Basic usage:
+### Basic usage
 
 ```js
 // Very simple example for a transform template that works with just the
@@ -52,7 +55,7 @@ getInputFile()
   .then(output => saveOutputFile(output));
 ```
 
-Advanced usage:
+### Advanced usage
 
 It's common to override or extend the built-in `functions` map.  It's also
 possible to extend functionality by extending or overriding the `traverse`,
@@ -111,6 +114,13 @@ A template for this custom transformer might look like this:
 
 More template examples can be found below.
 
+### Async usage
+
+You can create an async transformer by using the `traverseP` function instead
+of the `traverse` function.  The function will yield when processing objects
+and arrays in the template, allowing the processing of multiple files
+simultaneously.
+
 ## Template format
 
 Templates are JSON objects (or arrays) with structures similar to the desired
@@ -119,6 +129,8 @@ output format.  The input format can be completely different from the output.
 ### Example templates
 
 > TODO: more examples!!!
+
+> Hint: there are even more examples in the tests.
 
 The following template takes an input document's array of objects
 (`some_array_in_input`) and outputs a transformed array of objects.  The
@@ -161,23 +173,28 @@ following template will output an array with exactly two items:
 ### Notable features
 
 1.  Output values are computed via
-    [JsonPath](http://goessner.net/articles/JsonPath/) queries.  
-2.  Values can be computed via strings (like `"id": "$.ID"`) or via an object
+    [JsonPath](http://goessner.net/articles/JsonPath/) queries.
+2.  Queries are interpreted to determine whether the author intends to output a
+    single value ("scalar") or an array of values.  A query such as `"$.foo[*]"`
+    is clearly an array, but `"$.foo[0]"`, `"$.foo.bar"`, and `"$.foo['bar']"`
+    are for a single value.  The special case, `"$.foo[-1:]"` (a subscript
+    slice to fetch the last item), also returns a single value. _All other
+    subscript slices and expressions return an array of values._ For instance,
+    `"$.foo[(@.length-1)]"` returns an _array_ containing the last item.
+3.  Values can be computed via strings (like `"id": "$.ID"`) or via an object
     containing a `"$path"` instruction and further instructions (such as
     `"$map"`).  The value of the `"$path"` instruction is a JsonPath query used
     to query the document.
-3.  The `"$map"` instruction indicates that the associated value should be
+4.  The `"$map"` instruction indicates that the associated value should be
     transformed via a mapping function.  There are several built-in functions.
     (See the [Built-in functions](#built-in-functions))  You can extend these
     mapping functions by overriding/extending the built-in functions object.
-4.  Arrays of objects are defined via an array that must have _exactly_ one item
+5.  Arrays of objects are defined via an array that must have _exactly_ one item
     having an `"$each"` instruction. `"$each"` defines a JsonPath query to
     find the input values.  The remaining keys in the item describe a
     "prototype" of the objects in the array.  One output object will be created
-    for each JsonPath query result on the input document. (There's a bug in the
-    current implementation preventing the ability to flatten embedded arrays:
-    only the last `[*]` is used so only the innermost array is "spread".)
-5.  Conditional output can be achieved for many cases with the `"$exists"`
+    from the prototype for each JsonPath query result on the input document.
+6.  Conditional output can be achieved for many cases with the `"$exists"`
     instruction. The value of `"$exists"` is a JsonPath query.  If the query
     finds any matching value(s) in the input document, the entire template
     object is used.  Otherwise, it is omitted.
@@ -187,14 +204,11 @@ following template will output an array with exactly two items:
 1.  Detect more developer errors.  Specifically, the code to detect `"$"` keys
     in templates does not detect unknown keys or incorrect mixture of keys with
     non-keys.
-2.  JsonPath allows the input document arrays to be filtered via simple
-    [expressions](http://goessner.net/articles/JsonPath/index.html#e3).  
-    This could be valuable.  It's currently only supported in `"$path"`.
-3.  JsonPath allows "scoped" queries via a leading `"@"` instead of a leading
+2.  JsonPath allows "scoped" queries via a leading `"@"` instead of a leading
     `"$"` in queries.  This would make templates easier to read and refactor.
     For example, under a query of `"$.foo"` in a template, a scoped query of
     `"@.bar"` would resolve to `"$.foo.bar"`.
-4.  Add a `"$comment"` instruction.
+3.  Add a `"$comment"` instruction that doesn't get output.
 
 ### Built-in functions
 
@@ -234,7 +248,9 @@ Parameters:
 
 Result: a value to be inserted into the output document.
 
-Functions should return JSON-compatible values (number|string|Array|Object|null).
+Functions must return JSON-compatible values (number|string|Array|Object|null).
 Note `undefined` is not JSON-compatible.  You probably want to return `null`.
 
-Copyright © 2018 TetraScience, Inc. All Rights Reserved. You may not use, display, copy, distribute, or modify this code without the express written permission of TetraScience, Inc.
+Copyright © 2018 TetraScience, Inc. All Rights Reserved. You may not use,
+display, copy, distribute, or modify this code without the express written
+permission of TetraScience, Inc.
