@@ -53,11 +53,26 @@ const isSubTemplateArray =
 // Performs a JsonPath query on a document (object or array).
 const jsonPathValue =
   jsonpath => (doc, query) => {
-    const values = jsonpath.query(doc, query);
-    return values.length > 0
-      ? { value: values.length === 1 ? values[0] : values }
-      : { value: null };
+    const value = isArrayQuery(jsonpath, query)
+      ? jsonpath.query(doc, query)
+      : jsonpath.value(doc, query);
+    return { value: value === undefined ? null : value };
   };
+
+// If it has at least one expression, slice, or union subscript, the tempalte
+// author intended it to be an array.
+// TODO: pre-process the template, applying this function to pre-determine if
+// template author intended to return an array or value
+const isArrayQuery =
+  (jsonpath, query) =>
+    jsonpath
+      .parse(query)
+      .some(
+        ({ expression, operation }) =>
+          operation === 'subscript'
+          && !(expression.type === 'string_literal' || expression.type === 'numeric_literal')
+          && !(expression.type === 'slice' && expression.value === '-1:')
+      );
 
 // Converts a template spec for an array into individual specs for each item
 // discovered in the document.

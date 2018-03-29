@@ -54,8 +54,8 @@
     }
   ],
   "array_filter_expression": [
-    { "names": "granfalloons 1\n" },
-    { "names": "granfalloons 42\n" }
+    { "names": ["granfalloons 1\n"] },
+    { "names": ["granfalloons 42\n"] }
   ],
   "array_slice_expression": [
     { "id": 1 },
