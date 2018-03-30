@@ -82,7 +82,15 @@ const explodeArrayTemplate =
     // Extract sub-template
     const subTemplate = jsonClone(node[0]);
     const scope = subTemplate.$each;
+
+    // Check if it should be output
+    // TODO: rather than reproduce this logic here, refactor main loop to allow
+    //   multiple $ instructions (e.g. make main loop a transformation chain)
+    if ('$exists' in subTemplate && !jsonpath.value(doc, subTemplate.$exists))
+      return {};
+
     delete subTemplate.$each;
+    delete subTemplate.$exists;
     const strTemplate = JSON.stringify(subTemplate);
 
     // Run query to get selected (possibly filtered) nodes
@@ -113,8 +121,7 @@ const isOptionalSubTemplate =
 
 const maybeObjectTemplate =
   jsonpath => (doc, node) => {
-    const values = jsonpath.query(doc, node.$exists);
-    const exists = values !== null && /* for arrays: */ values.length > 0;
+    const exists = jsonpath.value(doc, node.$exists);
     if (!exists) return {};
 
     const clone = jsonClone(node);
