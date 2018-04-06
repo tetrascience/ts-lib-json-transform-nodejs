@@ -64,6 +64,7 @@
   "array_not_spread": ["vonnegut"],
   "arrayOfValues": ["Hello, Star Vega", "Torture and Blubber", "Science Fiction"],
   "arrayOfValues2": ["granfalloons 1\n", "granfalloons 42\n", "granfalloons 2\n"],
+  "arrayExistsShouldOutput": [{ "doesn't matter": 42 }, { "doesn't matter": 42 }, { "doesn't matter": 42 }],
   "firstValue": "Hello, Star Vega",
   "lastValue": "Science Fiction",
   "cantFindThis": null
