@@ -9,6 +9,9 @@
 const isoDate =
   (value) => {
     try {
+      if (isNil(value)) {
+        return value;
+      }
       // Attempt to convert, but lose time zone, unfortunately.
       return isIsoDate(value) ? String(value) : new Date(value).toISOString();
     } catch (e) {
@@ -38,15 +41,18 @@ const index =
 // `"totalTime": { "$path": "$.Runs[*].Time", "$map": "sum" }`.
 // Otherwise, a `null` is returned.
 const sum =
-  values =>
-    (nonEmpty(values) ? values.reduce((total, x) => total + Number(x), 0) : null);
+  values => (
+    nonEmpty(values) ?
+      values.reduce((total, x) => total + (x === undefined ? 0 : Number(x)), 0) :
+      null
+  );
 
 // Averages an array of values.  JsonPath query must return an array. Example:
 // `"avgLength": { "$path": "$.Runs[*].Length", "$map": "avg" }`
 // Returns `null` for empty arrays or non-arrays.
 const avg =
   values =>
-    (nonEmpty(values) ? sum(values) / values.length : null);
+    (nonEmpty(values) ? sum(values) / values.filter(it => !isNil(it)).length : null);
 
 // Computes minimum of an array of values. Works for non-numbers, too.
 // Returns `null` for empty arrays or non-arrays.
@@ -59,11 +65,21 @@ const max =
   values => (nonEmpty(values) ? values.sort()[values.length - 1] : null);
 
 // Trims a string.  Auto-converts non-strings to strings.
-const trim = value => String(value).trim();
+function trim(value) {
+  return isNil(value) ? value : String(value).trim();
+}
+
+function number(value) {
+  return isNil(value) ? value : Number(value);
+}
+
+function string(value) {
+  return isNil(value) ? value : String(value);
+}
 
 module.exports = {
-  Number,
-  String,
+  Number: number,
+  String: string,
   isoDate,
   index,
   sum,
@@ -75,3 +91,6 @@ module.exports = {
 
 const nonEmpty =
   it => Array.isArray(it) && it.length > 0;
+
+const isNil =
+  it => it === null || it === undefined;
