@@ -43,6 +43,8 @@
   "array_not_spread": [{ "$path": "$.id" }],
   "arrayOfValues": "$.wampeters[*].name",
   "arrayOfValues2": "$.wampeters[*].foma[*].name",
+  "arrayNotExistsShouldNotOutput": [{ "$exists": "$.unknownPath", "$each": "$.wampeters", "doesn't matter": 42 }],
+  "arrayExistsShouldOutput": [{ "$exists": "$.wampeters", "$each": "$.wampeters[*]", "doesn't matter": 42 }],
   "firstValue": "$.wampeters[0].name",
   "lastValue": "$.wampeters[-1:].name",
   "cantFindThis": "$.this.does.not.exist"
