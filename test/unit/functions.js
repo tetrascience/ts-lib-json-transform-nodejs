@@ -20,11 +20,13 @@ describe('map functions', () => {
   describe('Number', () => {
     functionsTested.Number = true;
     assertConversion('Number', 'number', functions.Number);
+    assert.strictEqual(functions.Number(null), null, 'null input should have null output');
   });
 
   describe('String', () => {
     functionsTested.String = true;
     assertConversion('String', 'string', functions.String);
+    assert.strictEqual(functions.String(null), null, 'null input should have null output');
   });
 
   describe('isoDate', () => {
@@ -85,6 +87,11 @@ describe('map functions', () => {
       assert.strictEqual(functions.sum({}), null);
       assert.strictEqual(functions.sum([]), null);
     });
+
+    it('should count null or undefined as a 0 when computing the sum', () => {
+      assert.strictEqual(functions.sum([null, 5, 5]), 10);
+      assert.strictEqual(functions.sum([5, undefined, 5]), 10);
+    });
   });
 
   describe('avg', () => {
@@ -96,6 +103,11 @@ describe('map functions', () => {
     });
 
     assertContinuation('avg', functions.avg);
+
+    it('should ignore null or undefined when computing the avg', () => {
+      assert.strictEqual(functions.avg([null, 5, 1]), 3);
+      assert.strictEqual(functions.avg([3, undefined, 0]), 1.5);
+    });
 
     it('should not throw if given a mixed array', () => {
       assert.doesNotThrow(() => functions.avg(['4', '3', null])); // mixed
@@ -112,6 +124,11 @@ describe('map functions', () => {
 
     assertContinuation('min', functions.min);
 
+    it('should ignore null or undefined when computing the min', () => {
+      assert.strictEqual(functions.min([null, 5, 2.5]), 2.5);
+      assert.strictEqual(functions.min([3, undefined, 2]), 2);
+    });
+
     it('should not throw if given a mixed array', () => {
       assert.doesNotThrow(() => functions.min(['4', '3', null])); // mixed
     });
@@ -126,6 +143,11 @@ describe('map functions', () => {
     });
 
     assertContinuation('max', functions.max);
+
+    it('should ignore null or undefined when computing the max', () => {
+      assert.strictEqual(functions.min([null, -5, -2.5]), -2.5);
+      assert.strictEqual(functions.min([-3, undefined, -2]), -2);
+    });
 
     it('should not throw if given a mixed array', () => {
       assert.doesNotThrow(() => functions.max(['4', '3', null])); // mixed
@@ -149,7 +171,12 @@ describe('map functions', () => {
 function assertConversion(name, type, func) {
   it(`should convert anything to a ${type}`, () => {
     manyTypesOfValues.forEach(
-      value => assert.strictEqual(typeof func(value), type)
+      (value) => {
+        if (value === null || value === undefined) {
+          return assert.strictEqual(func(value), value);
+        }
+        assert.strictEqual(typeof func(value), type);
+      }
     );
   });
 }
