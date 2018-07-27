@@ -5,15 +5,15 @@
 // value in the source document or if there's a _reasonable_ default to emit.
 // To achieve strictness, perform a subsequent schema validation on the output.
 
-// Converts a timestamp or string date to ISO 8601 / RFC 3339 without time zone.
+const spacetime = require('spacetime');
+
+// Converts a timestamp or string date to ISO 8601 / RFC 3339
 const isoDate =
   (value) => {
     try {
-      if (isNil(value)) {
-        return value;
-      }
+      if (isNil(value)) return value;
       // Attempt to convert, but lose time zone, unfortunately.
-      return isIsoDate(value) ? String(value) : new Date(value).toISOString();
+      return isIsoDate(value) ? value : spacetime(value).format('iso');
     } catch (e) {
       return `Invalid date: ${value}. ${e.message}`;
     }
@@ -64,9 +64,19 @@ const min =
 const max =
   values => (nonEmpty(values) ? values.sort()[values.length - 1] : null);
 
-// Trims a string.  Auto-converts non-strings to strings.
-function trim(value) {
-  return isNil(value) ? value : String(value).trim();
+// Trims a string of any spaces on the left and right of the string; also can
+// trim extra spaces from inside the string, and remove newline characters
+function trim(value, opt) {
+  let ss = value;
+  if (!isString(ss)) return ss;
+  if (!opt) return ss.trim();
+
+  if (opt.includes('n')) ss = ss.replace(/[\r\n]/g, ' ');
+  if (opt.includes('i')) ss = ss.replace(/\s{2,}/g, ' ');
+  if (opt.includes('l')) ss = ss.trimLeft();
+  if (opt.includes('r')) ss = ss.trimRight();
+
+  return ss;
 }
 
 function number(value) {
@@ -78,8 +88,8 @@ function string(value) {
 }
 
 module.exports = {
-  Number: number,
-  String: string,
+  number,
+  string,
   isoDate,
   index,
   sum,
@@ -94,3 +104,6 @@ const nonEmpty =
 
 const isNil =
   it => it === null || it === undefined;
+
+const isString =
+  it => Object.prototype.toString.call(it) === '[object String]';

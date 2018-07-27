@@ -1,11 +1,12 @@
 {
   "name": "ts-json-transform",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
   "main": "index.js",
   "repository": "https://github.com/tetrascience/ts-lib-json-transform-nodejs.git",
   "dependencies": {
-    "jsonpath": "^1.0.0"
+    "jsonpath": "^1.0.0",
+    "spacetime": "^4.3.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
