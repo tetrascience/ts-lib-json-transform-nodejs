@@ -68,7 +68,7 @@ const max =
 // trim extra spaces from inside the string, and remove newline characters
 function trim(value, opt) {
   let ss = value;
-  if (isString(ss)) return ss;
+  if (!isString(ss)) return ss;
   if (!opt) return ss.trim();
 
   if (opt.includes('n')) ss = ss.replace(/[\r\n]/g, ' ');
