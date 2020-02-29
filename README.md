@@ -212,8 +212,8 @@ following template will output an array with exactly two items:
 
 ### Built-in functions
 
-+ `Number`: converts the value to a number according to JavaScript semantics.
-+ `String`: converts the value to a string according to JavaScript semantics.
++ `number`: converts the value to a number according to JavaScript semantics.
++ `string`: converts the value to a string according to JavaScript semantics.
 + `isoDate`: converts the value to an ISO 8601 / RFC 3339 date.  Accepts any
   date that the current JavaScript runtime accepts.  At a minimum, this is
   any RFC 2822 or ISO 8601 date string or any number.  Other formats may work,
