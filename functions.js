@@ -9,13 +9,18 @@ const spacetime = require('spacetime');
 
 // Converts a timestamp or string date to ISO 8601 / RFC 3339
 const isoDate =
-  (value) => {
+  (value, originalValueIfNotParseable = false) => {
     try {
       if (isNil(value)) return value;
+
+      if (isIsoDate(value)) return value;
+
       // Attempt to convert, but lose time zone, unfortunately.
-      return isIsoDate(value) ? value : spacetime(value).format('iso');
+      const parsed = spacetime(value).format('iso');
+     
+      return (parsed === "" && originalValueIfNotParseable === true) ? value : parsed;
     } catch (e) {
-      return `Invalid date: ${value}. ${e.message}`;
+      return originalValueIfNotParseable === true ? value : `Invalid date: ${value}. ${e.message}`;
     }
   };
 
