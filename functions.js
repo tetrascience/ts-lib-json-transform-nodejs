@@ -6,6 +6,7 @@
 // To achieve strictness, perform a subsequent schema validation on the output.
 
 const spacetime = require('spacetime');
+const _ = require('lodash');
 
 // Converts a timestamp or string date to ISO 8601 / RFC 3339
 const isoDate =
@@ -64,11 +65,18 @@ const min =
 const max =
   values => (nonEmpty(values) ? values.sort()[values.length - 1] : null);
 
-// Trims a string of any spaces on the left and right of the string; also can
-// trim extra spaces from inside the string, and remove newline characters
+/**
+ * Trims an input string to get rid of unneeded line breaks and spaces.
+ * Trims all spaces on both sides of the string
+ * Trims all newline characters
+ * Trims extra spaces inside the string. If there are multiple spaces, only leave one space
+ * If the input is not a string, convert it to string
+ * @param {string} input
+ * @return {string} The trimmed string
+ */
 function trim(value, opt) {
   let ss = value;
-  if (!isString(ss)) return ss;
+  if (!isString(ss)) return string(ss);
   if (!opt) return ss.trim();
 
   if (opt.includes('n')) ss = ss.replace(/[\r\n]/g, ' ');
@@ -79,12 +87,67 @@ function trim(value, opt) {
   return ss;
 }
 
+/**
+ * Use bracket to extract metric and unit from an input string.
+ * For example if the input is "CO2 Concentration (ppm)",
+ * the metric will be "CO2 Concentration",
+ * the unit will be "ppm"
+ * @param input
+ * @return {{metric: string, unit: string}}
+ */
+function extractMetricAndUnitViaBracket(input) {
+  if (!_.isString(input)) {
+    throw new Error(`${input} is not a string`);
+  }
+  const regexp = /^(.+)(?:\s*)(?:\((.+)\))$/;
+  const components = input.match(regexp);
+  if (_.isNull(components)) {
+    return {
+      metric: input,
+      unit: null,
+    };
+  }
+  return {
+    metric: trim(components[1]),
+    unit: _.isUndefined(components[2]) ? null : components[2],
+  };
+}
+
+
+
 function number(value) {
   return isNil(value) ? value : Number(value);
 }
 
 function string(value) {
   return isNil(value) ? value : String(value);
+}
+
+function valueUnit(value, key) {
+  const s = trim(value);
+  const components = s.split(' ');
+
+  let unit = null;
+  // if the value looks like "1400 C"
+  if (components.length > 1) {
+    value = components.shift()
+    unit = components.join(' ');
+  } else {
+    // if the value does not look like "1400 C"
+    // try to get the unit from they key, assuming the key looks like "pressure (ppm)"
+    unit = extractMetricAndUnitViaBracket(key).unit;
+  }
+
+  value = number(value);
+
+  return {
+    value,
+    unit
+  }
+}
+
+function getKey(value, key) {
+  return key;
 }
 
 module.exports = {
@@ -97,6 +160,8 @@ module.exports = {
   min,
   max,
   trim,
+  valueUnit,
+  getKey,
 };
 
 const nonEmpty =

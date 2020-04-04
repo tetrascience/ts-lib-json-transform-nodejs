@@ -17,16 +17,16 @@ describe('map functions', () => {
     );
   });
 
-  describe('Number', () => {
+  describe('number', () => {
     functionsTested.Number = true;
-    assertConversion('Number', 'number', functions.Number);
-    assert.strictEqual(functions.Number(null), null, 'null input should have null output');
+    assertConversion('Number', 'number', functions.number);
+    assert.strictEqual(functions.number(null), null, 'null input should have null output');
   });
 
-  describe('String', () => {
+  describe('string', () => {
     functionsTested.String = true;
-    assertConversion('String', 'string', functions.String);
-    assert.strictEqual(functions.String(null), null, 'null input should have null output');
+    assertConversion('String', 'string', functions.string);
+    assert.strictEqual(functions.string(null), null, 'null input should have null output');
   });
 
   describe('isoDate', () => {
@@ -165,6 +165,14 @@ describe('map functions', () => {
     assertConversion('trim', 'string', functions.trim);
     assertContinuation('trim', functions.trim);
   });
+
+  describe('valueUnit', () => {
+    it('should create value unit object', () => {
+      assert.deepEqual(functions.valueUnit('14.1 Deg C'), { value: 14.1, unit: 'Deg C'});
+      assert.deepEqual(functions.valueUnit('14.1', 'pressure (ppm)'), { value: 14.1, unit: 'ppm'});
+      assert.deepEqual(functions.valueUnit('14.1', 'pressure'), { value: 14.1, unit: null});
+    })
+  })
 });
 
 // Shared suite of tests for functions that just do type conversion.
