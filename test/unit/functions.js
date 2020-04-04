@@ -18,14 +18,14 @@ describe('map functions', () => {
   });
 
   describe('number', () => {
-    functionsTested.Number = true;
-    assertConversion('Number', 'number', functions.number);
+    functionsTested.number = true;
+    assertConversion('number', 'number', functions.number);
     assert.strictEqual(functions.number(null), null, 'null input should have null output');
   });
 
   describe('string', () => {
-    functionsTested.String = true;
-    assertConversion('String', 'string', functions.string);
+    functionsTested.string = true;
+    assertConversion('string', 'string', functions.string);
     assert.strictEqual(functions.string(null), null, 'null input should have null output');
   });
 
@@ -168,9 +168,17 @@ describe('map functions', () => {
 
   describe('valueUnit', () => {
     it('should create value unit object', () => {
+      functionsTested.valueUnit = true;
       assert.deepEqual(functions.valueUnit('14.1 Deg C'), { value: 14.1, unit: 'Deg C'});
       assert.deepEqual(functions.valueUnit('14.1', 'pressure (ppm)'), { value: 14.1, unit: 'ppm'});
       assert.deepEqual(functions.valueUnit('14.1', 'pressure'), { value: 14.1, unit: null});
+    })
+  })
+
+  describe('getKey', () => {
+    it('should be able to get key', () => {
+      functionsTested.getKey = true;
+      assert.strictEqual(functions.getKey('14.1', 'a b c'), 'a b c');
     })
   })
 });
