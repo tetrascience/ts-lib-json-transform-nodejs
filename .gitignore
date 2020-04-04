@@ -1,7 +1,6 @@
 .travis/
 temp/
 .DS_Store
-yarn.lock
 
 # Logs
 logs
