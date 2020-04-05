@@ -224,6 +224,8 @@ following template will output an array with exactly two items:
 + `avg`: returns the average of an array of numbers.
 + `index`: returns the index within the current array of outputted items.
 + `trim`: converts to a string value with no leading or trailing white space.
++ `valueUnit` converts to a { value, unit } object.
++ `getKey` returns the key.
 
 ### Creating your own functions
 
