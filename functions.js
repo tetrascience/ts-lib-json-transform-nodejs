@@ -6,6 +6,7 @@
 // To achieve strictness, perform a subsequent schema validation on the output.
 
 const spacetime = require('spacetime');
+const _ = require('lodash');
 
 // Converts a timestamp or string date to ISO 8601 / RFC 3339
 const isoDate =
@@ -64,12 +65,42 @@ const min =
 const max =
   values => (nonEmpty(values) ? values.sort()[values.length - 1] : null);
 
+
 // Trims a string of any spaces on the left and right of the string
+// If not a string, convert it string.
 function trim(value) {
   let ss = value;
   if (!isString(ss)) ss = string(ss);
   return isNil(ss) ? ss : ss.trim();
 }
+
+/**
+ * Use bracket to extract metric and unit from an input string.
+ * For example if the input is "CO2 Concentration (ppm)",
+ * the metric will be "CO2 Concentration",
+ * the unit will be "ppm"
+ * @param input
+ * @return {{metric: string, unit: string}}
+ */
+function extractMetricAndUnitViaBracket(input) {
+  if (!_.isString(input)) {
+    throw new Error(`${input} is not a string`);
+  }
+  const regexp = /^(.+)(?:\s*)(?:\((.+)\))$/;
+  const components = input.match(regexp);
+  if (_.isNull(components)) {
+    return {
+      metric: input,
+      unit: null,
+    };
+  }
+  return {
+    metric: trim(components[1]),
+    unit: _.isUndefined(components[2]) ? null : components[2],
+  };
+}
+
+
 
 function number(value) {
   return isNil(value) ? value : Number(value);
@@ -77,6 +108,43 @@ function number(value) {
 
 function string(value) {
   return isNil(value) ? value : String(value);
+}
+
+/**
+ * Create { value, object } object from the value and key
+ * This is to handle IDS creation for the following examples
+ * Example 1 -- "temperature: 1400 C" (value: "1400 C", key: "temperature")
+ * Example 2 -- "pressure (ppm): 200" (value: "200", key: "pressure (ppm)")
+ * Example 3 -- "speed: 100" (value: "100", key: "speed")
+ * @param {string} value
+ * @param {string} key
+ * @return {object} { value: 14, unit: 'C'} 
+ */
+function valueUnit(value, key) {
+  const s = trim(value);
+  const components = s.split(' ');
+
+  let unit = null;
+  // if the value looks like "1400 C" or "1400 Deg C"
+  if (components.length > 1) {
+    value = components.shift()
+    unit = components.join(' ');
+  } else {
+    // if the value does not look like "1400 C"
+    // try to get the unit from they key, assuming the key looks like "pressure (ppm)"
+    unit = extractMetricAndUnitViaBracket(key).unit;
+  }
+
+  value = number(value);
+
+  return {
+    value,
+    unit
+  }
+}
+
+function getKey(value, key) {
+  return key;
 }
 
 module.exports = {
@@ -89,6 +157,9 @@ module.exports = {
   min,
   max,
   trim,
+  valueUnit,
+  getKey,
+  extractMetricAndUnitViaBracket,
 };
 
 const nonEmpty =
