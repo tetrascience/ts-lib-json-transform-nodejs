@@ -9,7 +9,7 @@
     {
       "$each": "$.wampeters[*]",
       "id": "$.wampeters[*].id",
-      "stringId": { "$path": "$.wampeters[*].id", "$map": "String" },
+      "stringId": { "$path": "$.wampeters[*].id", "$map": "string" },
       "indexed": { "$path": "$.wampeters[*]", "$map": "index" },
       "subobject": {
         "$exists": "$.wampeters[*].condition",

@@ -2,7 +2,7 @@
   "object": {
     "constant": "this is constant",
     "simple": "vonnegut",
-    "complex": "1996-12-25T05:00:00.000Z",
+    "complex": "1996-12-25T00:00:00.000Z",
     "simplex": "12/25/1996"
   },
   "array": [
