@@ -181,6 +181,14 @@ describe('map functions', () => {
       assert.strictEqual(functions.getKey('14.1', 'a b c'), 'a b c');
     })
   })
+
+  describe('extractMetricAndUnitViaBracket', () => {
+    it('should be able to extract metric and unit', () => {
+      functionsTested.extractMetricAndUnitViaBracket = true;
+      assert.deepEqual(functions.extractMetricAndUnitViaBracket('pressure (ppm)'), { metric: 'pressure', unit: 'ppm'});
+      assert.deepEqual(functions.extractMetricAndUnitViaBracket('pressure'), { metric: 'pressure', unit: null});
+    })
+  })
 });
 
 // Shared suite of tests for functions that just do type conversion.

@@ -123,12 +123,22 @@ function string(value) {
   return isNil(value) ? value : String(value);
 }
 
+/**
+ * Create { value, object } object from the value and key
+ * This is to handle IDS creation for the following examples
+ * Example 1 -- "temperature: 1400 C" (value: "1400 C", key: "temperature")
+ * Example 2 -- "pressure (ppm): 200" (value: "200", key: "pressure (ppm)")
+ * Example 3 -- "speed: 100" (value: "100", key: "speed")
+ * @param {string} value
+ * @param {string} key
+ * @return {object} { value: 14, unit: 'C'} 
+ */
 function valueUnit(value, key) {
   const s = trim(value);
   const components = s.split(' ');
 
   let unit = null;
-  // if the value looks like "1400 C"
+  // if the value looks like "1400 C" or "1400 Deg C"
   if (components.length > 1) {
     value = components.shift()
     unit = components.join(' ');
@@ -162,6 +172,7 @@ module.exports = {
   trim,
   valueUnit,
   getKey,
+  extractMetricAndUnitViaBracket,
 };
 
 const nonEmpty =
