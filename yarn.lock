@@ -2875,10 +2875,10 @@ source-map@^0.6.1, source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-spacetime@^4.3.0:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/spacetime/-/spacetime-4.5.1.tgz#2a2afa274707aa8841f14a0b559335f5084a1bdd"
-  integrity sha512-BbseGO2ZHCnNSv5J76pxExU99kDBXM83V3O4xALypUPftWmAbIQqreUfY2De60a90tJObI2vwu1KV41xDLgpCQ==
+spacetime@^6.4.2:
+  version "6.4.2"
+  resolved "https://registry.yarnpkg.com/spacetime/-/spacetime-6.4.2.tgz#1d7a0e65b36170aa64b0ab4f896ae6deb5abe197"
+  integrity sha512-CWLPqJxhGBcQNE1cXmcppHVKxW/oqZjakKDtyrYL7yRROWmdjyyZ7ypLkJOX20yq6bHt7O88xZPa2zAkXuc/EA==
 
 spawn-wrap@^1.4.2:
   version "1.4.3"
