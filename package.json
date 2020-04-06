@@ -6,7 +6,7 @@
   "repository": "https://github.com/tetrascience/ts-lib-json-transform-nodejs.git",
   "dependencies": {
     "jsonpath": "^1.0.0",
-    "spacetime": "^4.3.0"
+    "spacetime": "^6.4.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",

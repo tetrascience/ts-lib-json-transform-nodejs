@@ -16,8 +16,8 @@ const isoDate =
       if (isIsoDate(value)) return value;
 
       // Attempt to convert, but lose time zone, unfortunately.
-      const parsed = spacetime(value).format('iso');
-     
+      const parsed = spacetime(value, 'UTC').format('iso');
+
       return (parsed === "" && originalValueIfNotParseable === true) ? value : parsed;
     } catch (e) {
       return originalValueIfNotParseable === true ? value : `Invalid date: ${value}. ${e.message}`;
@@ -69,19 +69,11 @@ const min =
 const max =
   values => (nonEmpty(values) ? values.sort()[values.length - 1] : null);
 
-// Trims a string of any spaces on the left and right of the string; also can
-// trim extra spaces from inside the string, and remove newline characters
-function trim(value, opt) {
+// Trims a string of any spaces on the left and right of the string
+function trim(value) {
   let ss = value;
-  if (!isString(ss)) return ss;
-  if (!opt) return ss.trim();
-
-  if (opt.includes('n')) ss = ss.replace(/[\r\n]/g, ' ');
-  if (opt.includes('i')) ss = ss.replace(/\s{2,}/g, ' ');
-  if (opt.includes('l')) ss = ss.trimLeft();
-  if (opt.includes('r')) ss = ss.trimRight();
-
-  return ss;
+  if (!isString(ss)) ss = string(ss);
+  return isNil(ss) ? ss : ss.trim();
 }
 
 function number(value) {
