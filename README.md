@@ -218,6 +218,8 @@ following template will output an array with exactly two items:
   date that the current JavaScript runtime accepts.  At a minimum, this is
   any RFC 2822 or ISO 8601 date string or any number.  Other formats may work,
   but may vary by platform.
++ `isoDateOrOriginal`: similar to isoDate, the difference being that it returns
+  the input value if it cannot be parsed (instead of an empty string or an error message)
 + `min`: returns the minimum value of an array of numbers, strings, etc.
 + `max`: returns the maximum value of an array of numbers, strings, etc.
 + `sum`: returns the sum of an array of numbers.

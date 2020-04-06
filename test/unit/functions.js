@@ -47,6 +47,24 @@ describe('map functions', () => {
     });
   });
 
+  describe('isoDateOrOriginal', () => {
+    it('should convert date-strings and return raw value if input iis not parseable', () => {
+      functionsTested.isoDateOrOriginal = true;
+      const values = ['1997-01-13', '2017-12-25T12:00:01.000+05:00'];
+      values.forEach(
+        value => assert(isValidDate(functions.isoDateOrOriginal(value)), String(value))
+      );
+    });
+
+    it('should return input string on non-date-strings', () => {
+      assert.equal(functions.isoDateOrOriginal('12/25/2016T00:00:00'), '12/25/2016T00:00:00'); // no time zone
+      assert.equal(functions.isoDateOrOriginal('foo'), 'foo')
+    });
+
+    assertConversion('isoDateOrOriginal', 'string', functions.isoDateOrOriginal);
+    assertContinuation('isoDateOrOriginal', functions.isoDateOrOriginal);
+  });
+
   describe('index', () => {
     it('should find the index for well-formed jsonpath queries', () => {
       functionsTested.index = true;
