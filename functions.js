@@ -19,6 +19,19 @@ const isoDate =
     }
   };
 
+// Converts a timestamp or string date to ISO 8601 / RFC 3339, but return original value if
+// the passed value cannot be parsed
+const isoDateOrOriginal =
+  (value) => {
+    const parsed = isoDate(value);
+
+    if (!parsed || parsed.indexOf('Invalid date') > 0) {
+      return value;
+    }
+
+    return parsed;
+  };
+
 const isoDateRx =
   /^(\d{2}|\d{4})-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:?\d{2}|Z)$/i;
 
@@ -83,6 +96,7 @@ module.exports = {
   number,
   string,
   isoDate,
+  isoDateOrOriginal,
   index,
   sum,
   avg,
