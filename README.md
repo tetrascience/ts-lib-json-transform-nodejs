@@ -226,6 +226,7 @@ following template will output an array with exactly two items:
 + `trim`: converts to a string value with no leading or trailing white space.
 + `valueUnit` converts to a { value, unit } object.
 + `getKey` returns the key.
++ `extractMetricAndUnitViaBracket` return {metric, unit} object from "CO2 concentration (ppm)".
 
 ### Creating your own functions
 

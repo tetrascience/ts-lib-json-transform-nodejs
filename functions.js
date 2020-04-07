@@ -101,7 +101,7 @@ function extractMetricAndUnitViaBracket(input) {
   }
   const regexp = /^(.+)(?:\s*)(?:\((.+)\))$/;
   const components = input.match(regexp);
-  if (_.isNull(components)) {
+  if (_.isNil(components)) {
     return {
       metric: input,
       unit: null,
@@ -109,7 +109,7 @@ function extractMetricAndUnitViaBracket(input) {
   }
   return {
     metric: trim(components[1]),
-    unit: _.isUndefined(components[2]) ? null : components[2],
+    unit: components[2] || null,
   };
 }
 
