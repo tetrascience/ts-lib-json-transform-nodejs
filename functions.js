@@ -14,7 +14,7 @@ const isoDate =
     try {
       if (isNil(value)) return value;
       // Attempt to convert, but lose time zone, unfortunately.
-      return isIsoDate(value) ? value : spacetime(value).format('iso');
+      return isIsoDate(value) ? value : spacetime(value, 'UTC').format('iso');
     } catch (e) {
       return `Invalid date: ${value}. ${e.message}`;
     }
@@ -65,26 +65,13 @@ const min =
 const max =
   values => (nonEmpty(values) ? values.sort()[values.length - 1] : null);
 
-/**
- * Trims an input string to get rid of unneeded line breaks and spaces.
- * Trims all spaces on both sides of the string
- * Trims all newline characters
- * Trims extra spaces inside the string. If there are multiple spaces, only leave one space
- * If the input is not a string, convert it to string
- * @param {string} input
- * @return {string} The trimmed string
- */
-function trim(value, opt) {
+
+// Trims a string of any spaces on the left and right of the string
+// If not a string, convert it string.
+function trim(value) {
   let ss = value;
-  if (!isString(ss)) return string(ss);
-  if (!opt) return ss.trim();
-
-  if (opt.includes('n')) ss = ss.replace(/[\r\n]/g, ' ');
-  if (opt.includes('i')) ss = ss.replace(/\s{2,}/g, ' ');
-  if (opt.includes('l')) ss = ss.trimLeft();
-  if (opt.includes('r')) ss = ss.trimRight();
-
-  return ss;
+  if (!isString(ss)) ss = string(ss);
+  return isNil(ss) ? ss : ss.trim();
 }
 
 /**
