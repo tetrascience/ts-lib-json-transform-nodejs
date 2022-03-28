@@ -1,4 +1,4 @@
-## JIRA Ticket
+## JIRA ticket
 <!-- JIRA ticket !-->
 
 ## Description
