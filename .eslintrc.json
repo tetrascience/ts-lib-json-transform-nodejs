@@ -1,6 +1,0 @@
-{
-  "extends": "tetrascience/lib",
-  "plugins": [
-    "json"
-  ]
-}
