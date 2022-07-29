@@ -11,7 +11,7 @@ on:
     - 'release/**'
 
 jobs:
-  build-test-and-deploy:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:

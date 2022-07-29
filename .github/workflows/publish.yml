@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    uses: tetrascience/devops/.github/workflows/publish-npm-package.yml@EP-187
+    uses: tetrascience/devops/.github/workflows/publish-npm-package.yml@EP-187_3
     secrets:
       AUTH_TOKEN: '${{ secrets.JFROG_ARTIFACTORY_DATA_INSIGHTS_NPM_AUTH }}'
       REGISTRY: '${{ secrets.JFROG_ARTIFACTORY_NPM_VIRTUAL_URL }}'
