@@ -1,0 +1,14 @@
+name: Publish
+
+on:
+  pull_request:
+  push:
+    tags: '*'
+
+jobs:
+  publish:
+    uses: tetrascience/devops/.github/workflows/publish-npm-package.yml@P-187
+    secrets:
+      AUTH_TOKEN: '${{ secrets.JFROG_ARTIFACTORY_DATA_INSIGHTS_NPM_AUTH }}'
+      REGISTRY: '${{ secrets.JFROG_ARTIFACTORY_NPM_VIRTUAL_URL }}'
+      PUBLISH_REGISTRY: '${{ secrets.JFROG_ARTIFACTORY_DATA_INSIGHTS_NPM_URL }}' 
