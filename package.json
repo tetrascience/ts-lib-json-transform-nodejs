@@ -1,7 +1,6 @@
 {
   "name": "ts-json-transform",
-  "version": "3.1.2",
-  "private": true,
+  "version": "4.0.0",
   "main": "index.js",
   "repository": "https://github.com/tetrascience/ts-lib-json-transform-nodejs.git",
   "dependencies": {
@@ -24,5 +23,6 @@
     "lint": "./node_modules/.bin/eslint . --ext .js --ext .json",
     "test": "ENV=test NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --timeout 1000",
     "test-unit": "ENV=test NODE_ENV=test mocha --timeout 1000"
-  }
+  },
+  "packageManager": "yarn@3.2.2"
 }

@@ -90,3 +90,11 @@ fabric.properties
 
 # VSCode user preferences
 .vscode
+
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
