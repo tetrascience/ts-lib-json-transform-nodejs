@@ -21,8 +21,8 @@
   },
   "scripts": {
     "lint": "./node_modules/.bin/eslint . --ext .js --ext .json",
-    "test": "ENV=test NODE_ENV=test nyc --reporter=lcov --reporter=text mocha ./test/unit --timeout 1000",
-    "test-unit": "ENV=test NODE_ENV=test mocha --timeout 1000"
+    "test": "ENV=test NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --timeout 1000 --recursive",
+    "test-unit": "ENV=test NODE_ENV=test mocha --timeout 1000 --recursive"
   },
   "packageManager": "yarn@3.2.2"
 }
