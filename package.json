@@ -14,14 +14,14 @@
     "chai-as-promised": "^6.0.0",
     "eslint": "^8.14.0",
     "eslint-plugin-json": "^1.2.0",
-    "mocha": "^3.2.0",
-    "nyc": "^11.2.1",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
     "sinon": "^4.1.2",
     "typescript": "^4.6.4"
   },
   "scripts": {
     "lint": "./node_modules/.bin/eslint . --ext .js --ext .json",
-    "test": "ENV=test NODE_ENV=test nyc --reporter=lcov --reporter=text mocha --timeout 1000",
+    "test": "ENV=test NODE_ENV=test nyc --reporter=lcov --reporter=text mocha ./test/unit --timeout 1000",
     "test-unit": "ENV=test NODE_ENV=test mocha --timeout 1000"
   },
   "packageManager": "yarn@3.2.2"
