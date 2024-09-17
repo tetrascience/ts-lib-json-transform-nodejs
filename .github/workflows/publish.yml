@@ -44,7 +44,7 @@ jobs:
       - name: Configure JFrog Artifactory (Publish)
         run: |
           sed -i "s/npmRegistryServer: .*//g" .yarnrc.yml
-          echo "npmRegistryServer: ${{ secrets.JFROG_ARTIFACTORY_DATA_INSIGHTS_NPM_URL }}" >> .yarnrc.yml
+          echo "npmRegistryServer: ${{ secrets.JFROG_ARTIFACTORY_WRITE_NPM_AUTH }}" >> .yarnrc.yml
 
       - name: Publish package
         if: steps.match-version.PACKAGE_VERSION == steps.match-version.TAG_VERSION
