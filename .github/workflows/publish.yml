@@ -15,8 +15,8 @@ jobs:
 
       - name: Configure JFrog Artifactory
         run: |
-          echo "npmRegistryServer: ${{ secrets.JFROG_ARTIFACTORY_NPM_VIRTUAL_URL }}" >> .yarnrc.yml
-          echo "npmAuthIdent: ${{ secrets.JFROG_ARTIFACTORY_DATA_INSIGHTS_NPM_AUTH }}" >> .yarnrc.yml
+          echo "npmRegistryServer: ${{ secrets.JFROG_ARTIFACTORY_WRITE_NPM_URL }}" >> .yarnrc.yml
+          echo "npmAuthIdent: ${{ secrets.JFROG_ARTIFACTORY_WRITE_NPM_AUTH }}" >> .yarnrc.yml
           echo "npmAlwaysAuth: true" >> .yarnrc.yml
 
       - run: yarn install --immutable
